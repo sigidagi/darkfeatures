@@ -9,6 +9,16 @@ namespace ld = launchdarkly;
 
 namespace dark {
 
+struct User {
+    std::string key;
+    std::string name;
+    std::string location;
+    std::string work;
+    std::string city;
+    int born;
+    bool male;
+};
+
 class RemoteClient {
   private:
     RemoteClient(); // Disallow instantiation outside of the class.

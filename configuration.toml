@@ -1,0 +1,7 @@
+Kind = "User"
+Key = "sigis-key"
+Name = "Sigis"
+Location = "Lithuania"
+Work = "Sky"
+Born = 1969
+Male = true
