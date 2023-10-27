@@ -5,6 +5,7 @@
 #include <cstring>
 #include <iostream>
 
+#include "enum.h"
 #include "remote_client.hpp"
 #include "spdlog/fmt/fmt.h"
 
@@ -30,7 +31,37 @@ void tick(const boost::system::error_code & /*e*/) {
     timer.async_wait(tick);
 }
 
+struct Foo {
+    int one;
+    std::string msg;
+};
+
+BETTER_ENUM(Error_e, int, UNDEFINED = 1, INPUT_ERROR, UNKNOWN)
+
+tl::expected<Foo, Error_e> getConfiguration(std::string_view name) {
+
+    if (name.empty()) {
+        return tl::make_unexpected(Error_e::UNDEFINED);
+    }
+
+    std::cout << (+Error_e::INPUT_ERROR)._to_string() << "\n";
+
+    return Foo{.one = 5, .msg = std::string{name}};
+}
+
 int main() {
+
+    tl::expected<Foo, Error_e> e1 = Foo{.one = 3, .msg = "this is good"};
+    if (e1.has_value()) {
+        fmt::print("Expected value {}\n", e1.value().msg);
+    }
+
+    auto ret = getConfiguration("ok");
+    if (ret.has_value()) {
+        std::cout << "expected value " << ret.value().msg << "\n";
+    } else {
+        std::cout << "expected error " << ret.error() << "\n";
+    }
 
     bool success = dark::RemoteClient::instance().init(MOBILE_KEY);
     if (!success) {
